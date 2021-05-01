@@ -192,12 +192,14 @@ const App = () => {
         <option> 0.5 </option>
         <option> 1 </option>
       </select>
-      <a href="" class="btn btn3">
-        Hover Me
-      </a>
 
-      <button onClick={() => downloadImage("png")}>Download PNG</button>
-      <button onClick={() => downloadImage("jpeg")}>Download JPG</button>
+      <div onClick={() => downloadImage("png")} className="btn downloadpng">
+        Download PNG
+      </div>
+
+      <div onClick={() => downloadImage("jpeg")} className="btn downloadjpg">
+        Download JPG
+      </div>
     </div>
   );
 };
