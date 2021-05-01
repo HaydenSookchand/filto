@@ -22,8 +22,8 @@ const App = () => {
 
   const initCanvas = () =>
     new fabric.Canvas("canvas", {
-      height: 300,
-      width: 300,
+      height: 250,
+      width: 250,
       margin: 300,
       backgroundColor: "black"
     });
@@ -61,8 +61,8 @@ const App = () => {
   const addImageToCanvas = () => {
     let photo = document.getElementById("target");
     var imgInstance = new fabric.Image(photo);
-    imgInstance.scaleToHeight(300);
-    imgInstance.scaleToWidth(300);
+    imgInstance.scaleToHeight(250);
+    imgInstance.scaleToWidth(250);
     if (canvas) {
       canvas._objects = []; //remove other image from canvas
       canvas.add(imgInstance);
@@ -138,8 +138,6 @@ const App = () => {
     <div className="content">
       <div className="header"> Filto </div>
 
-      <img onClick={openFile} src={addButton} className="addButton" />
-
       <canvas id="canvas" />
 
       <div className="file-button-container">
@@ -183,6 +181,8 @@ const App = () => {
           src={vintage}
           className="filterButton"
         />
+
+        <img onClick={openFile} src={addButton} className="filterButton" />
       </div>
 
       <select id="myList" onChange={addFilterStrength}>
@@ -192,6 +192,10 @@ const App = () => {
         <option> 0.5 </option>
         <option> 1 </option>
       </select>
+      <a href="" class="btn btn3">
+        Hover Me
+      </a>
+
       <button onClick={() => downloadImage("png")}>Download PNG</button>
       <button onClick={() => downloadImage("jpeg")}>Download JPG</button>
     </div>
