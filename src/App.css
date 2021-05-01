@@ -3,12 +3,27 @@
     text-align: center;
 }
 
-.header {
+.logo {
+    width: 175px;
     padding: 20px;
-    font-size: 30px;
+}
+
+.btn {
+    color: white;
+    font-size: 14px;
+    font-family: "montserrat";
+    width: 35%;
+    padding: 14px 60px;
+    text-transform: uppercase;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.startBtn {
+    margin-top: 35px;
+    background-color: #ff6fff;
     font-weight: 700;
-    text-align: center;
-    color: white
 }
 
 .addButton {
@@ -18,17 +33,21 @@
 
 .canvas-container {
     margin: 0 auto;
-    margin-top: 10px
-}
-
-.file-button-container {
-    text-align: center;
-    padding: 5px
+    margin-top: 10px;
 }
 
 .controls {
     padding: 20px;
     text-align: center
+}
+
+.filters {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.filterStrength {
+    padding: 10px;
 }
 
 .filterButton {
@@ -41,22 +60,10 @@
     text-align: center
 }
 
-.btn {
-    color: white;
-    font-size: 14px;
-    font-family: "montserrat";
-    width: 30%;
-    padding: 14px 60px;
-    text-transform: uppercase;
-    margin: 0 auto;
-    margin-bottom: 10px;
-    margin-top: 10px;
-}
-
-.downloadjpg {
+.downloadJpgBtn {
     background-color: #1E90FF;
 }
 
-.downloadpng {
+.downloadPngBtn {
     background-color: #BA55D3;
 }

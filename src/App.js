@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { fabric } from "fabric";
-import addButton from "./images/add.png";
-import original from "./images/original.png";
-import blur from "./images/blur.png";
-import sepia from "./images/sepia.png";
-import vintage from "./images/vintage.png";
+import FilterControls from "./components/FilterControls";
+import DownloadButtons from "./components/DownloadButtons";
+import logo from "./images/logo.png";
 import "./App.css";
 
 const App = () => {
   const [canvas, setCanvas] = useState("");
   const [image, setImage] = useState("");
-  const [filter, setFilter] = useState(false);
+  const [isBlur, setIsBlur] = useState(false);
 
   useEffect(() => {
     setCanvas(initCanvas());
@@ -22,9 +20,9 @@ const App = () => {
 
   const initCanvas = () =>
     new fabric.Canvas("canvas", {
-      height: 250,
-      width: 250,
-      margin: 300,
+      height: 225,
+      width: 300,
+
       backgroundColor: "black"
     });
 
@@ -34,6 +32,8 @@ const App = () => {
   };
 
   const onImageChange = event => {
+    initCanvas();
+
     if (event.target.files && event.target.files[0]) {
       let reader = new FileReader();
       reader.onload = e => {
@@ -61,8 +61,8 @@ const App = () => {
   const addImageToCanvas = () => {
     let photo = document.getElementById("target");
     var imgInstance = new fabric.Image(photo);
-    imgInstance.scaleToHeight(250);
-    imgInstance.scaleToWidth(250);
+    imgInstance.scaleToHeight(225);
+    imgInstance.scaleToWidth(300);
     if (canvas) {
       canvas._objects = []; //remove other image from canvas
       canvas.add(imgInstance);
@@ -83,9 +83,9 @@ const App = () => {
     }
   }
 
-  const addFilterStrength = e => {
-    let image = canvas._objects[0]; // clean up magic number
-    let strength = parseFloat(e.target.value);
+  const addFilterStrength = strength => {
+    let image = canvas._objects[0]; // only one image on canvas
+
     image.filters[0]["blur"] = strength;
     image.applyFilters();
     canvas.renderAll();
@@ -93,38 +93,37 @@ const App = () => {
 
   const addFilter = userFilter => {
     let imageFilter = "";
-    let image = canvas._objects[0]; // clean up magic number
-
-    // turn into a switch
+    let image = canvas._objects[0];
+    setIsBlur(false);
     if (image) {
       image.filters = [];
 
-      if (userFilter === "greyscale") {
-        imageFilter = new fabric.Image.filters.Grayscale();
-      }
-
-      if (userFilter === "blur") {
-        imageFilter = new fabric.Image.filters.Blur({
-          blur: 0.5
-        });
-      }
-
-      if (userFilter === "sepia") {
-        imageFilter = new fabric.Image.filters.Sepia();
-      }
-
-      if (userFilter === "vintage") {
-        imageFilter = new fabric.Image.filters.Vintage();
-      }
-
-      if (userFilter === "original") {
-        image.filters = [];
-        image.applyFilters();
-        canvas.renderAll();
+      switch (userFilter) {
+        case "blur":
+          setIsBlur(true);
+          imageFilter = new fabric.Image.filters.Blur({
+            blur: 0.5
+          });
+          break;
+        case "sepia":
+          imageFilter = new fabric.Image.filters.Sepia();
+          break;
+        case "vintage":
+          imageFilter = new fabric.Image.filters.Vintage();
+          break;
+        case "kodachrome":
+          imageFilter = new fabric.Image.filters.Kodachrome();
+          break;
+        case "technicolor":
+          imageFilter = new fabric.Image.filters.Technicolor();
+          break;
+        default:
+          image.filters = [];
+          image.applyFilters();
+          canvas.renderAll();
       }
 
       if (imageFilter) {
-        setFilter(true);
         image.filters.push(imageFilter);
         image.applyFilters();
         canvas.renderAll();
@@ -136,19 +135,17 @@ const App = () => {
 
   return (
     <div className="content">
-      <div className="header"> Filto </div>
-
+      <img alt="logo" id="logo" src={logo} className="logo" />
       <canvas id="canvas" />
 
-      <div className="file-button-container">
-        <input
-          type="file"
-          onChange={onImageChange}
-          className="uploadButton"
-          id="uploadButton"
-          style={{ display: "none" }}
-        />
-      </div>
+      {/*  This is the native file input element. It is currently hidden and another button is implemented */}
+      <input
+        type="file"
+        onChange={onImageChange}
+        className="uploadButton"
+        id="uploadButton"
+        style={{ display: "none" }}
+      />
 
       <img
         alt="uploadedimage"
@@ -157,49 +154,21 @@ const App = () => {
         src={image}
       />
 
-      <div className="controls">
-        <img
-          onClick={() => addFilter("original")}
-          src={original}
-          className="filterButton"
-        />
-
-        <img
-          onClick={() => addFilter("blur")}
-          src={blur}
-          className="filterButton"
-        />
-
-        <img
-          onClick={() => addFilter("sepia")}
-          src={sepia}
-          className="filterButton"
-        />
-
-        <img
-          onClick={() => addFilter("vintage")}
-          src={vintage}
-          className="filterButton"
-        />
-
-        <img onClick={openFile} src={addButton} className="filterButton" />
-      </div>
-
-      <select id="myList" onChange={addFilterStrength}>
-        <option> Blur Filter Strength </option>
-        <option> 0 </option>
-        <option> 0.2 </option>
-        <option> 0.5 </option>
-        <option> 1 </option>
-      </select>
-
-      <div onClick={() => downloadImage("png")} className="btn downloadpng">
-        Download PNG
-      </div>
-
-      <div onClick={() => downloadImage("jpeg")} className="btn downloadjpg">
-        Download JPG
-      </div>
+      {image ? (
+        <div>
+          <FilterControls
+            addFilter={addFilter}
+            openFile={openFile}
+            addFilterStrength={addFilterStrength}
+            isBlur={isBlur}
+          />
+          <DownloadButtons downloadImage={downloadImage} />
+        </div>
+      ) : (
+        <div onClick={openFile} className="btn startBtn">
+          Choose Image
+        </div>
+      )}
     </div>
   );
 };
