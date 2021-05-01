@@ -12,6 +12,7 @@ const App = () => {
 
   useEffect(() => {
     setCanvas(initCanvas());
+    fabric.textureSize = 5168;
   }, []);
 
   useEffect(() => {
@@ -32,8 +33,6 @@ const App = () => {
   };
 
   const onImageChange = event => {
-    initCanvas();
-
     if (event.target.files && event.target.files[0]) {
       let reader = new FileReader();
       reader.onload = e => {
