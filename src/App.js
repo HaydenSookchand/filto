@@ -23,10 +23,10 @@ const App = () => {
     new fabric.Canvas("canvas", {
       height: 225,
       width: 300,
-
       backgroundColor: "black"
     });
 
+  /* Clicks on hidden input to open files */
   const openFile = () => {
     var openButton = document.getElementById("uploadButton");
     openButton.click();
@@ -38,6 +38,7 @@ const App = () => {
       reader.onload = e => {
         setImage(URL.createObjectURL(event.target.files[0]));
         setTimeout(() => {
+          emptyCanvas();
           addImageToCanvas();
           lockCanvas();
         }, 500);
@@ -46,7 +47,6 @@ const App = () => {
     }
   };
 
-  // locks items on canvas
   const lockCanvas = () => {
     if (canvas) {
       canvas.selection = false;
@@ -56,14 +56,18 @@ const App = () => {
     }
   };
 
-  // locks add images on canvas
-  const addImageToCanvas = () => {
-    let photo = document.getElementById("target");
-    var imgInstance = new fabric.Image(photo);
-    imgInstance.scaleToHeight(225);
-    imgInstance.scaleToWidth(300);
+  const emptyCanvas = () => {
     if (canvas) {
       canvas._objects = []; //remove other image from canvas
+    }
+  };
+
+  const addImageToCanvas = () => {
+    if (canvas) {
+      let photo = document.getElementById("target");
+      var imgInstance = new fabric.Image(photo);
+      imgInstance.scaleToHeight(225);
+      imgInstance.scaleToWidth(300);
       canvas.add(imgInstance);
     }
   };
@@ -84,7 +88,6 @@ const App = () => {
 
   const addFilterStrength = strength => {
     let image = canvas._objects[0]; // only one image on canvas
-
     image.filters[0]["blur"] = strength;
     image.applyFilters();
     canvas.renderAll();
@@ -94,47 +97,50 @@ const App = () => {
     let imageFilter = "";
     let image = canvas._objects[0];
     setIsBlur(false);
-    if (image) {
-      image.filters = [];
 
-      switch (userFilter) {
-        case "blur":
-          setIsBlur(true);
-          imageFilter = new fabric.Image.filters.Blur({
-            blur: 0.5
-          });
-          break;
-        case "sepia":
-          imageFilter = new fabric.Image.filters.Sepia();
-          break;
-        case "vintage":
-          imageFilter = new fabric.Image.filters.Vintage();
-          break;
-        case "kodachrome":
-          imageFilter = new fabric.Image.filters.Kodachrome();
-          break;
-        case "technicolor":
-          imageFilter = new fabric.Image.filters.Technicolor();
-          break;
-        default:
-          image.filters = [];
-          image.applyFilters();
-          canvas.renderAll();
-      }
+    if (!image) {
+      alert("Please add an Image");
+      return;
+    }
 
-      if (imageFilter) {
-        image.filters.push(imageFilter);
+    image.filters = [];
+
+    switch (userFilter) {
+      case "blur":
+        setIsBlur(true);
+        imageFilter = new fabric.Image.filters.Blur({
+          blur: 0.5
+        });
+        break;
+      case "sepia":
+        imageFilter = new fabric.Image.filters.Sepia();
+        break;
+      case "vintage":
+        imageFilter = new fabric.Image.filters.Vintage();
+        break;
+      case "kodachrome":
+        imageFilter = new fabric.Image.filters.Kodachrome();
+        break;
+      case "technicolor":
+        imageFilter = new fabric.Image.filters.Technicolor();
+        break;
+      default:
+        image.filters = [];
         image.applyFilters();
         canvas.renderAll();
-      }
-    } else {
-      alert("Please add an Image");
+    }
+
+    if (imageFilter) {
+      image.filters.push(imageFilter);
+      image.applyFilters();
+      canvas.renderAll();
     }
   };
 
   return (
     <div className="content">
       <img alt="logo" id="logo" src={logo} className="logo" />
+
       <canvas id="canvas" />
 
       {/*  This is the native file input element. It is currently hidden and another button is implemented */}
@@ -164,8 +170,10 @@ const App = () => {
           <DownloadButtons downloadImage={downloadImage} />
         </div>
       ) : (
-        <div onClick={openFile} className="btn startBtn">
-          Choose Image
+        <div className="home">
+          <div onClick={openFile} className="btn startBtn">
+            Choose Image
+          </div>
         </div>
       )}
     </div>
