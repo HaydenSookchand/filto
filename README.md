@@ -26,3 +26,7 @@ https://github.com/HaydenSookchand/filto
 ## Netlify
 
 https://filto.netlify.app/
+
+## PageSpeed
+
+https://developers.google.com/speed/pagespeed/insights/?url=https%3A%2F%2Ffilto.netlify.app%2F
